@@ -11,12 +11,20 @@ exports.createOrder = function(req, res, next) {
     amount: 10.5,
     status: 0,
     fromAddress: {
+      geoLocation: {
+        lat: 1.279580,
+        long: 103.786245
+      },
       postal: 118136,
       street: 'xxxxx',
       placeName: 'xxxxxx',
       extra: ''
     },
     toAddress: {
+      geoLocation: {
+        lat: 1.383762,
+        long: 103.845894
+      },
       postal: 569780,
       street: 'A very interesting street',
       placeName: 'A very big building',
