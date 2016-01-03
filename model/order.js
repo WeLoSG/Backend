@@ -6,6 +6,10 @@ var Schema = mongoose.Schema;
 // address object:
 /*
 var addr = {
+  geoLocation: {
+    lat: xxx,
+    long: xxx
+  },
   postal: 118xxx,
   street: 'xxxxx',
   placeName: 'xxxxxx',
