@@ -4,55 +4,63 @@ exports.createOrder = function(req, res, next) {
   // var orderVo = req.body.order;
   // validate order data
   // create Order object
-  var oredrNo = Order.generateOrderNumber();
-  var orderDao = {
-    created_by: 'test', // get userId from session code
-    order_number: oredrNo,
-    amount: 10.5,
-    status: 0,
-    fromAddress: {
-      geoLocation: {
-        lat: 1.279580,
-        long: 103.786245
-      },
-      postal: 118136,
-      street: 'xxxxx',
-      placeName: 'xxxxxx',
-      extra: ''
-    },
-    toAddress: {
-      geoLocation: {
-        lat: 1.383762,
-        long: 103.845894
-      },
-      postal: 569780,
-      street: 'A very interesting street',
-      placeName: 'A very big building',
-      extra: '#03-29'
-    },
-    recipientName: 'Mr.Jason',
-    recipientContact: '88888888',
-    comments: 'A very short comment',
-  };
+  var mockData = Order.generateMockData();
 
-  var newOrder = new Order(orderDao);
-
-  newOrder.save(function(err) {
-    if (err) {
-      next(err);
-    }
-    console.log('Success');
-    res.status(200).end();
+  var count = 0;
+  mockData.forEach(function(doc) {
+    var newOrder = new Order(doc);
+    newOrder.save(function(err) {
+      if (err) {
+        next(err);
+      }
+      count++;
+      if (count === mockData.length) {
+        res.status(200).end();
+      }
+    });
   });
 };
 
-exports.getOrders = function(req, res) {
+exports.getAllOrders = function(req, res) {
   Order.find({}, function(err, orders) {
     res.send(orders);
   });
 };
 
-exports.getOrder = function(req, res) {
+// Retrieve order within 5km of requester's location
+exports.getOrdersWithinRange = function(req, res) {
+  req.checkQuery('lat', 'Invalid data for: lat').notEmpty().isFloat();
+  req.checkQuery('lng', 'Invalid data for: lng').notEmpty().isFloat();
+
+  var errors = req.validationErrors();
+  if (errors) {
+    var msg = {
+      'error': {
+        'code': 400,
+        'message': 'Invalid request parameters.'
+      }
+    };
+    res.send(msg, 400);
+    return;
+  }
+
+  // find 5km orders around current locations
+  Order.find({
+    location: {
+      $near: {
+        $geometry: {
+          type: 'Point',
+          coordinates: [parseFloat(req.query.lng), parseFloat(req.query.lat)]
+        },
+        $maxDistance: 5000
+      }
+    }
+  }, function(err, orders) {
+    res.send(orders);
+  });
+};
+
+exports.getOrderById = function(req, res) {
   var orderNo = req.params.orderNo;
   Order.find({
     'order_number': orderNo

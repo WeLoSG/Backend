@@ -4,8 +4,8 @@ var router = express.Router();
 var orderController = require('../controller/orderController');
 
 // Get order
-router.get('/', orderController.getOrders);
-router.get('/:orderNo', orderController.getOrder);
+router.get('/', orderController.getOrdersWithinRange);
+router.get('/:orderNo', orderController.getOrderById);
 
 // Create order
 router.post('/', orderController.createOrder);
