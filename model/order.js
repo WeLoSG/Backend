@@ -21,7 +21,16 @@ var orderSchema = new Schema({
     required: true,
     index: true
   },
-  order_number: {
+  deliver_by: { // deliver id
+    type: String,
+    default: null,
+    index: true
+  },
+  contactName: { // user name
+    type: String,
+    required: true
+  },
+  orderId: {
     type: String,
     required: true,
     unique: true,
@@ -62,7 +71,7 @@ var orderSchema = new Schema({
   }
 });
 
-// generate order_number using timestamp
+// generate orderId using timestamp
 orderSchema.statics.generateOrderNumber = function() {
   return 'W' + (new Date()).getTime(); // might be improved later, not a good design here
 };
@@ -71,8 +80,10 @@ orderSchema.statics.generateOrderNumber = function() {
 orderSchema.statics.generateMockData = function() {
   var data = [];
   data.push({
-    created_by: 'test', // get userId from session code
-    order_number: 'W1452097030368',
+    created_by: 'test',
+    deliver_by: null,
+    contactName: 'Mr.test',
+    orderId: 'W1452097030368',
     amount: 10.5,
     status: 0,
     orderType: 0,
@@ -103,8 +114,10 @@ orderSchema.statics.generateMockData = function() {
     comments: 'A very short comment',
   });
   data.push({
-    created_by: 'test', // get userId from session code
-    order_number: 'W1452097030369',
+    created_by: 'test',
+    deliver_by: null,
+    contactName: 'Mr.test',
+    orderId: 'W1452097030369',
     amount: 20.5,
     status: 0,
     orderType: 1,
@@ -135,8 +148,10 @@ orderSchema.statics.generateMockData = function() {
     comments: 'A very short comment',
   });
   data.push({
-    created_by: 'test', // get userId from session code
-    order_number: 'W1452097030370',
+    created_by: 'test',
+    deliver_by: null,
+    contactName: 'Mr.test',
+    orderId: 'W1452097030370',
     amount: 10.5,
     status: 0,
     orderType: 2,
@@ -167,8 +182,10 @@ orderSchema.statics.generateMockData = function() {
     comments: 'A very short comment',
   });
   data.push({
-    created_by: 'test', // get userId from session code
-    order_number: 'W1452097030371',
+    created_by: 'test',
+    deliver_by: null,
+    contactName: 'Mr.test',
+    orderId: 'W1452097030371',
     amount: 120.5,
     status: 0,
     orderType: 3,
@@ -199,8 +216,10 @@ orderSchema.statics.generateMockData = function() {
     comments: 'A very short comment',
   });
   data.push({
-    created_by: 'test', // get userId from session code
-    order_number: 'W1452097030372',
+    created_by: 'test',
+    deliver_by: null,
+    contactName: 'Mr.test',
+    orderId: 'W1452097030372',
     amount: 102.5,
     orderType: 1,
     status: 0,
@@ -231,11 +250,13 @@ orderSchema.statics.generateMockData = function() {
     comments: 'A very short comment',
   });
   data.push({
-    created_by: 'test', // get userId from session code
-    order_number: 'W1452097030380',
+    created_by: 'test',
+    deliver_by: null,
+    contactName: 'Mr.test',
+    orderId: 'W1452097030380',
     amount: 50.5,
     orderType: 1,
-    status: 1,
+    status: 0,
     fromAddress: {
       geoLocation: {
         lat: 1.2994441,

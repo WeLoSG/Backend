@@ -66,27 +66,39 @@ exports.getOrdersWithinRange = function(req, res) {
 exports.getOrderById = function(req, res) {
   var orderNo = req.params.orderNo;
   Order.find({
-    'order_number': orderNo
+    'orderId': orderNo
   }, function(err, order) {
     res.send(order);
+  });
+};
+
+exports.getOrdersByDeliver = function(req, res) {
+  var userId = req.params.userId;
+  Order.find({
+    'deliver_by': userId
+  }, function(err, orders) {
+    res.send(orders);
   });
 };
 
 exports.updateOrder = function(req, res, next) {
   var orderNo = req.params.orderNo;
   var queryCondition = {
-    'order_number': orderNo
+    'orderId': orderNo
   };
   var updateCondition = {};
   var operation = req.body.op;
-
+  var deliverId = req.body.deliverId;
+  console.log(deliverId);
   if (operation === 'deliver') {
     if (req.body.action === 'confirm') {
       queryCondition.status = 0; // confirm an status 0 order for starting deliver
       updateCondition.status = 1;
+      updateCondition.deliver_by = deliverId;
     } else if (req.body.action === 'revert') {
       queryCondition.status = 1; // confirm an status 0 order for starting deliver
       updateCondition.status = 0;
+      updateCondition.deliver_by = null;
     }
   }
 
@@ -102,7 +114,7 @@ exports.updateOrder = function(req, res, next) {
 exports.removeOrder = function(req, res, next) {
   var orderNo = req.params.orderNo;
   Order.remove({
-    'order_number': orderNo
+    'orderId': orderNo
   }, function(err, data) {
     if (err) {
       next(new Error('Error when deleting order ' + orderNo));
