@@ -54,7 +54,10 @@ exports.getOrdersWithinRange = function(req, res) {
         },
         $maxDistance: 5000
       }
-    }
+    },
+    status: {
+      $eq: 0
+    } // find only undelivered orders
   }, function(err, orders) {
     res.send(orders);
   });
@@ -71,20 +74,33 @@ exports.getOrderById = function(req, res) {
 
 exports.updateOrder = function(req, res, next) {
   var orderNo = req.params.orderNo;
-  var updateCondition = {};
-  // set update condition
-  Order.where({
+  var queryCondition = {
     'order_number': orderNo
-  }).update(updateCondition, function(err) {
-    if (err) {
-      next(new Error('Error when updating order ' + orderNo));
+  };
+  var updateCondition = {};
+  var operation = req.body.op;
+
+  if (operation === 'deliver') {
+    if (req.body.action === 'confirm') {
+      queryCondition.status = 0; // confirm an status 0 order for starting deliver
+      updateCondition.status = 1;
+    } else if (req.body.action === 'revert') {
+      queryCondition.status = 1; // confirm an status 0 order for starting deliver
+      updateCondition.status = 0;
     }
+  }
+
+  // set update condition
+  Order.findOneAndUpdate(queryCondition, updateCondition, function(err, order) {
+    if (err || order === null) {
+      return next(new Error('Error when updating order ' + orderNo));
+    }
+    res.send(order);
   });
 };
 
 exports.removeOrder = function(req, res, next) {
   var orderNo = req.params.orderNo;
-  console.log(orderNo);
   Order.remove({
     'order_number': orderNo
   }, function(err, data) {

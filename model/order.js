@@ -12,7 +12,6 @@ var addr = {
   },
   postal: 118xxx,
   street: 'xxxxx',
-  placeName: 'xxxxxx',
   extra: <optional like unit, blk, building xxx>
 }
 */
@@ -27,6 +26,10 @@ var orderSchema = new Schema({
     required: true,
     unique: true,
     index: true
+  },
+  orderType: { // 0: document, 1: small parcel 2: medium parcel 3: large parcel
+    type: Number,
+    default: 0
   },
   amount: Number,
   status: {
@@ -72,6 +75,7 @@ orderSchema.statics.generateMockData = function() {
     order_number: 'W1452097030368',
     amount: 10.5,
     status: 0,
+    orderType: 0,
     fromAddress: {
       geoLocation: {
         lat: 1.2796715,
@@ -79,8 +83,7 @@ orderSchema.statics.generateMockData = function() {
       },
       postal: 118136,
       street: 'xxxxx',
-      placeName: 'xxxxxx',
-      extra: ''
+      extra: 'test'
     },
     toAddress: {
       geoLocation: {
@@ -89,8 +92,7 @@ orderSchema.statics.generateMockData = function() {
       },
       postal: 569780,
       street: 'A very interesting street',
-      placeName: 'A very big building',
-      extra: '#03-29'
+      extra: 'Test building #027'
     },
     location: {
       type: 'Point',
@@ -105,6 +107,7 @@ orderSchema.statics.generateMockData = function() {
     order_number: 'W1452097030369',
     amount: 20.5,
     status: 0,
+    orderType: 1,
     fromAddress: {
       geoLocation: {
         lat: 1.2914217,
@@ -112,8 +115,7 @@ orderSchema.statics.generateMockData = function() {
       },
       postal: 118420,
       street: 'xxxxx',
-      placeName: 'xxxxxx',
-      extra: ''
+      extra: '#04-20'
     },
     toAddress: {
       geoLocation: {
@@ -122,8 +124,7 @@ orderSchema.statics.generateMockData = function() {
       },
       postal: 569780,
       street: 'A very interesting street',
-      placeName: 'A very big building',
-      extra: '#03-29'
+      extra: '#03-29 building 2'
     },
     location: {
       type: 'Point',
@@ -138,6 +139,7 @@ orderSchema.statics.generateMockData = function() {
     order_number: 'W1452097030370',
     amount: 10.5,
     status: 0,
+    orderType: 2,
     fromAddress: {
       geoLocation: {
         lat: 1.2879893,
@@ -145,8 +147,7 @@ orderSchema.statics.generateMockData = function() {
       },
       postal: 118222,
       street: 'xxxxx',
-      placeName: 'xxxxxx',
-      extra: ''
+      extra: 'Blk 27'
     },
     toAddress: {
       geoLocation: {
@@ -155,8 +156,7 @@ orderSchema.statics.generateMockData = function() {
       },
       postal: 569780,
       street: 'A very interesting street',
-      placeName: 'A very big building',
-      extra: '#03-29'
+      extra: '#04-20 Blk28'
     },
     location: {
       type: 'Point',
@@ -171,6 +171,7 @@ orderSchema.statics.generateMockData = function() {
     order_number: 'W1452097030371',
     amount: 120.5,
     status: 0,
+    orderType: 3,
     fromAddress: {
       geoLocation: {
         lat: 1.2772202,
@@ -178,8 +179,7 @@ orderSchema.statics.generateMockData = function() {
       },
       postal: 118136,
       street: 'xxxxx',
-      placeName: 'xxxxxx',
-      extra: ''
+      extra: '#0202 Blk71'
     },
     toAddress: {
       geoLocation: {
@@ -188,8 +188,7 @@ orderSchema.statics.generateMockData = function() {
       },
       postal: 569780,
       street: 'A very interesting street',
-      placeName: 'A very big building',
-      extra: '#03-29'
+      extra: '#03-29 Vava Va'
     },
     location: {
       type: 'Point',
@@ -203,6 +202,7 @@ orderSchema.statics.generateMockData = function() {
     created_by: 'test', // get userId from session code
     order_number: 'W1452097030372',
     amount: 102.5,
+    orderType: 1,
     status: 0,
     fromAddress: {
       geoLocation: {
@@ -211,8 +211,7 @@ orderSchema.statics.generateMockData = function() {
       },
       postal: 118136,
       street: 'xxxxx',
-      placeName: 'xxxxxx',
-      extra: ''
+      extra: '8th floor'
     },
     toAddress: {
       geoLocation: {
@@ -221,12 +220,43 @@ orderSchema.statics.generateMockData = function() {
       },
       postal: 569780,
       street: 'A very interesting street',
-      placeName: 'A very big building',
-      extra: '#03-29'
+      extra: 'House 27'
     },
     location: {
       type: 'Point',
       coordinates: [103.7862665, 1.2994448] // [lng, lat]
+    },
+    recipientName: 'Mr.Jason',
+    recipientContact: '88888888',
+    comments: 'A very short comment',
+  });
+  data.push({
+    created_by: 'test', // get userId from session code
+    order_number: 'W1452097030380',
+    amount: 50.5,
+    orderType: 1,
+    status: 1,
+    fromAddress: {
+      geoLocation: {
+        lat: 1.2994441,
+        long: 103.7862657
+      },
+      postal: 118136,
+      street: 'NUS Computing',
+      extra: '8th floor'
+    },
+    toAddress: {
+      geoLocation: {
+        lat: 1.383762,
+        long: 103.845894
+      },
+      postal: 569780,
+      street: 'A very interesting street',
+      extra: 'House 27'
+    },
+    location: {
+      type: 'Point',
+      coordinates: [103.7862657, 1.2994441] // [lng, lat]
     },
     recipientName: 'Mr.Jason',
     recipientContact: '88888888',
