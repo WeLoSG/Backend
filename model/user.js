@@ -25,6 +25,18 @@ var userSchema = new Schema({
     type: String,
     default: null
   },
+  ic: {
+    type: String,
+    default: null
+  },
+  vehiceNumber: {
+    type: String,
+    default: null
+  },
+  drivingLicense: {
+    type: String,
+    default: null
+  },
   isDriver: {
     type: Boolean,
     required: true
