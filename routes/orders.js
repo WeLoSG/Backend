@@ -10,7 +10,7 @@ router.get('/deliver/:userId', orderController.getOrdersByDeliver);
 router.get('/:orderNo', orderController.getOrderById);
 
 // Create order
-router.post('/', orderController.createOrder);
+router.post('/', userController.requireAuthentication, orderController.createOrder);
 
 // Update order
 router.patch('/:orderNo', orderController.updateOrder);

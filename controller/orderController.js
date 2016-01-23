@@ -1,23 +1,16 @@
 var Order = require('../model/order.js');
 
 exports.createOrder = function(req, res, next) {
-  // var orderVo = req.body.order;
-  // validate order data
-  // create Order object
-  var mockData = Order.generateMockData();
+  var order = req.body.order;
+  order.orderId = Order.generateOrderNumber();
 
-  var count = 0;
-  mockData.forEach(function(doc) {
-    var newOrder = new Order(doc);
-    newOrder.save(function(err) {
-      if (err) {
-        next(err);
-      }
-      count++;
-      if (count === mockData.length) {
-        res.status(200).end();
-      }
-    });
+  var newOrder = new Order(order);
+  newOrder.created_by = req.user._id;
+  newOrder.save(function(err) {
+    if (err) {
+      next(err);
+    }
+    res.status(200).end();
   });
 };
 

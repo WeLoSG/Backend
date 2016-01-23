@@ -2,11 +2,15 @@ var User = require('../model/user.js');
 var token = require('./token.js');
 
 exports.authenticate = function(req, res, next) {
-  var weloToken = req.query.welo_token;
   req.user = {};
   req.authentication = {
     isAuthenticated: false
   };
+  if (!req.query) {
+    req.authentication.message = 'no token provided';
+    return next();
+  }
+  var weloToken = req.query.welo_token;
   if (weloToken) {
     var decoded = token.decryptToken(weloToken);
     if (decoded.expires > Date.now()) {

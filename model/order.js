@@ -30,6 +30,10 @@ var orderSchema = new Schema({
     type: String,
     required: true
   },
+  contactNumber: { // user name
+    type: String,
+    required: true
+  },
   orderId: {
     type: String,
     required: true,

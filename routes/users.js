@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-var userController = require('../config/tokenauth');
-
 var userController = require('../controller/userController');
 
 router.post('/login/', userController.loginUser);

@@ -22,7 +22,8 @@ var userSchema = new Schema({
     required: true
   },
   creditCard: {
-    type: String
+    type: String,
+    default: null
   },
   isDriver: {
     type: Boolean,
