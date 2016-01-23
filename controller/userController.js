@@ -68,6 +68,9 @@ exports.createUser = function(req, res, next) {
 
   newUser.save(function(err) {
     if (err) {
+      if (err.code === 11000) {
+        return next(new Error('Error: duplicate email address.'));
+      }
       return next(new Error('Error creating user'));
     }
 

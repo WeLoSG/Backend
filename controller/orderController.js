@@ -65,8 +65,17 @@ exports.getOrderById = function(req, res) {
   });
 };
 
+exports.getOrdersByClient = function(req, res) {
+  var userId = req.user._id;
+  Order.find({
+    'created_by': userId
+  }, function(err, orders) {
+    res.send(orders);
+  });
+};
+
 exports.getOrdersByDeliver = function(req, res) {
-  var userId = req.params.userId;
+  var userId = req.user._id;
   Order.find({
     'deliver_by': userId
   }, function(err, orders) {
