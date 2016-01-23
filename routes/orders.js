@@ -6,8 +6,8 @@ var orderController = require('../controller/orderController');
 
 // Get order
 router.get('/', orderController.getOrdersWithinRange);
-router.get('/deliver/', userController.requireAuthentication, orderController.getOrdersByDeliver);
-router.get('/client/', userController.requireAuthentication, orderController.getOrdersByClient);
+router.get('/deliver', userController.requireAuthentication, orderController.getOrdersByDeliver);
+router.get('/client', userController.requireAuthentication, orderController.getOrdersByClient);
 router.get('/:orderNo', orderController.getOrderById);
 
 // Create order
