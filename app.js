@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 // require routes
 var index = require('./routes/index');
 var orders = require('./routes/orders');
+var users = require('./routes/users');
 
 var app = express();
 
@@ -32,7 +33,9 @@ app.use(require('./config/caching').removeNotModified);
 
 // Routes
 app.use('/', index);
+app.use(require('./config/tokenauth').authenticate);
 app.use('/orders', orders);
+app.use('/users', users);
 app.use(require('./routes/errors').errorHandler); // error handler
 
 module.exports = app;

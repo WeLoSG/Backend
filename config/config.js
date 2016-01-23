@@ -1,3 +1,4 @@
 module.exports = {
-  db: 'mongodb://localhost/welo'
+  db: 'mongodb://localhost/welo',
+  secret: 'weloverysecret',
 };
