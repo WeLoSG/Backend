@@ -1,12 +1,14 @@
 var User = require('../model/user.js');
 var token = require('../config/token.js');
+var crypto = require('crypto');
 
 exports.loginUser = function(req, res, next) {
-  var userEmail = req.body.email;
+  var email = req.body.email;
   var password = req.body.password;
+  password = crypto.createHash('sha1').update(password).digest('hex');
 
   User.findOne({
-    email: userEmail
+    email: email
   }, function(err, user) {
     if (err) {
       return next(new Error('Error creating user'));
@@ -58,7 +60,11 @@ exports.loginUser = function(req, res, next) {
 };
 
 exports.createUser = function(req, res, next) {
+
   var newUser = new User(req.body.user);
+
+  newUser.password = crypto.createHash('sha1').update(newUser.password).digest(
+    'hex');
 
   newUser.save(function(err) {
     if (err) {
@@ -86,7 +92,6 @@ exports.createUser = function(req, res, next) {
       };
     }
 
-    console.log('User saved successfully');
     // return the information including token as JSON
     return res.status(200).send({
       status: 'success',
