@@ -85,18 +85,17 @@ exports.getOrdersByDeliver = function(req, res) {
 
 exports.updateOrder = function(req, res, next) {
   var orderNo = req.params.orderNo;
+  var userId = req.user._id;
   var queryCondition = {
     'orderId': orderNo
   };
   var updateCondition = {};
-  var operation = req.body.op;
-  var deliverId = req.body.deliverId;
-  console.log(deliverId);
-  if (operation === 'deliver') {
+
+  if (req.user.isDriver) { // a driver wants to update an order
     if (req.body.action === 'confirm') {
       queryCondition.status = 0; // confirm an status 0 order for starting deliver
       updateCondition.status = 1;
-      updateCondition.deliver_by = deliverId;
+      updateCondition.deliver_by = userId; // assign deliver for this order
     } else if (req.body.action === 'revert') {
       queryCondition.status = 1; // confirm an status 0 order for starting deliver
       updateCondition.status = 0;
