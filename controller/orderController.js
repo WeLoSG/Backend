@@ -69,7 +69,9 @@ exports.getOrdersByClient = function(req, res) {
   var userId = req.user._id;
   Order.find({
     'created_by': userId
-  }, function(err, orders) {
+  }).sort({
+    'created_at': -1
+  }).exec(function(err, orders) {
     res.send(orders);
   });
 };
@@ -78,7 +80,11 @@ exports.getOrdersByDeliver = function(req, res) {
   var userId = req.user._id;
   Order.find({
     'deliver_by': userId
-  }, function(err, orders) {
+  }).sort({
+    'status': 1,
+    'updated_at': -1
+
+  }).exec(function(err, orders) {
     res.send(orders);
   });
 };
@@ -95,12 +101,22 @@ exports.updateOrder = function(req, res, next) {
     if (req.body.action === 'confirm') {
       queryCondition.status = 0; // confirm an status 0 order for starting deliver
       updateCondition.status = 1;
+      updateCondition.updated_at = new Date(); // update update_time
       updateCondition.deliver_by = userId; // assign deliver for this order
+    } else if (req.body.action === 'pickup') {
+      queryCondition.status = 1; // confirm an status 1 order for starting deliver
+      updateCondition.status = 2;
+      updateCondition.updated_at = new Date(); // update update_time
+    } else if (req.body.action === 'delivered') {
+      queryCondition.status = 2; // confirm an status 2 order for starting deliver
+      updateCondition.status = 3;
+      updateCondition.updated_at = new Date(); // update update_time
     } else if (req.body.action === 'revert') {
-      queryCondition.status = 1; // confirm an status 0 order for starting deliver
       updateCondition.status = 0;
       updateCondition.deliver_by = null;
     }
+  } else {
+    // update order for client
   }
 
   // set update condition
